@@ -1,5 +1,22 @@
 #!/bin/bash
 
+# Prerequisite check
+check_dependencies() {
+    local missing=0
+    for cmd in curl jq date grep awk timeout whois; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            echo "Error: '$cmd' is not installed or not found in PATH." >&2
+            missing=1
+        fi
+    done
+    if [ "$missing" -ne 0 ]; then
+        echo "Please install the missing prerequisites and try again." >&2
+        exit 1
+    fi
+}
+
+check_dependencies
+
 # Configuration - tuned for speed
 WHOIS_TIMEOUT=3  # seconds (reduced from 5)
 RDAP_TIMEOUT=1   # seconds (very aggressive)
